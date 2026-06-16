@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Rync Play Server - أفخم سيرفر ماين كرافت</title>
+<meta name="description" content="انضم إلى سيرفر Rync Play لتجربة ماين كرافت لا تُنسى" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg-stage"></div>
+<div class="bg-grid"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <img src="assets/logo.png" class="logo" alt="Rync Play" />
+      <h1>RYNC PLAY</h1>
+    </div>
+    <ul>
+      <li><a href="#home">الرئيسية</a></li>
+      <li><a href="#instructions">التعليمات</a></li>
+      <li><a href="#pages">صفحات</a></li>
+    </ul>
+    <a class="btn ghost" href="#join">انضم الآن</a>
+  </div>
+</nav>
+
+<div id="announce-host"></div>
+
+<section id="home" class="hero">
+  <img src="assets/logo.png" class="logo-big" alt="Rync Play Logo" />
+  <div>
+    <img src="assets/title.png" class="title-img" alt="Rync Play" />
+  </div>
+  <p class="tagline" id="site-desc">أفخم سيرفر ماين كرافت عربي - انضم إلينا الآن!</p>
+  <a id="join" class="btn btn-xl" href="#" target="_blank" rel="noopener">
+    🎮 الدخول للسيرفر
+  </a>
+
+  <div class="grid grid-2" style="margin-top:40px;text-align:right">
+    <div class="card">
+      <h3 style="margin:0 0 6px;color:#fff">عنوان السيرفر (Address)</h3>
+      <div class="copy-row">
+        <span class="lbl">IP</span>
+        <span class="val" id="srv-address">144.76.72.157</span>
+        <button class="copy-btn" data-copy="srv-address">نسخ</button>
+      </div>
+      <span class="coming">قريباً: نسخة Bedrock</span>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 6px;color:#fff">المنفذ (Port)</h3>
+      <div class="copy-row">
+        <span class="lbl">PORT</span>
+        <span class="val" id="srv-port">27065</span>
+        <button class="copy-btn" data-copy="srv-port">نسخ</button>
+      </div>
+      <span class="coming">قريباً: دومين مخصص</span>
+    </div>
+  </div>
+</section>
+
+<section id="instructions" class="section">
+  <h2>📜 تعليمات الدخول</h2>
+  <div class="card">
+    <ol class="steps" id="instructions-list">
+      <li>اضغط زر "الدخول للسيرفر" بالأعلى.</li>
+      <li>أو افتح ماين كرافت وأضف السيرفر يدوياً بالعنوان والبورت.</li>
+      <li>استمتع باللعب مع أصدقائك!</li>
+    </ol>
+  </div>
+</section>
+
+<section id="pages" class="section">
+  <h2>📚 صفحات إضافية</h2>
+  <div class="card" id="pages-host">
+    <p style="color:var(--muted);margin:0">جاري التحميل…</p>
+  </div>
+</section>
+
+<footer>
+  © <span id="yr"></span> Rync Play Server — جميع الحقوق محفوظة
+</footer>
+
+<div class="toast" id="toast">تم النسخ ✔</div>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear()</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

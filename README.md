@@ -1,34 +1,40 @@
-# RYNC PLAY — موقع سيرفر ماين كرافت
+# 🎮 Rync Play Server - موقع ماين كرافت
 
-موقع ثابت HTML/CSS/JS متصل بـ Supabase. جاهز للرفع على GitHub والاستضافة على Vercel.
+موقع فخم (HTML / CSS / JS فقط) لسيرفر ماين كرافت **Rync Play** متصل بـ Supabase.
 
-## الملفات
-- `index.html` — الصفحة الرئيسية + زر الدخول للسيرفر + نسخ العنوان والبورت
-- `instructions.html` — صفحة التعليمات
-- `admin.html` — لوحة المطور (كلمة السر مخزنة في قاعدة البيانات بشكل مشفّر)
-- `styles.css` — التصميم (أخضر/أسود فخم، عربي RTL)
-- `supabase.js` — اتصال Supabase + دوال مساعدة
-- `setup.sql` — كود قاعدة البيانات (شغّله مرة واحدة)
+## 📂 الملفات
+- `index.html` - الصفحة الرئيسية (زر الدخول + IP + Port)
+- `page.html` - عارض الصفحات الديناميكية (`page.html?slug=xxx`)
+- `admin-dev.html` - **لوحة المطور المخفية** (لا يوجد لها رابط بالموقع)
+- `styles.css` - التنسيقات
+- `app.js` - منطق الصفحة الرئيسية
+- `admin.js` - منطق لوحة المطور
+- `config.js` - مفاتيح Supabase
+- `supabase.sql` - **شغّله مرّة واحدة في Supabase → SQL Editor**
+- `assets/` - الشعار والعنوان
 
-## خطوات التشغيل
+## 🚀 الخطوات
+1. **شغّل SQL**: افتح Supabase Dashboard → SQL Editor → الصق محتوى `supabase.sql` → Run.
+2. **ارفع المجلد إلى GitHub** ثم اربطه بـ **Vercel** (Framework Preset: Other / Static).
+3. افتح الموقع.
+4. لوحة المطور: `https://yourdomain.com/admin-dev.html`
+   - كلمة السر الافتراضية: **admin** (يمكن تغييرها من اللوحة).
 
-### 1) إعداد قاعدة البيانات
-1. ادخل على https://supabase.com/dashboard/project/infiapggmsfcitdmryly/sql
-2. افتح **New Query**
-3. الصق كل محتوى `setup.sql` ثم اضغط **Run**
+## ⚙️ ما يمكنك تعديله من اللوحة
+- اسم الموقع ووصفه.
+- عنوان السيرفر (IP) والمنفذ (Port).
+- رابط الدخول `minecraft://...`.
+- شفافية خلفية الموقع.
+- التعليمات (سطر = خطوة).
+- الإعلانات (إضافة / إظهار / إخفاء / حذف).
+- الصفحات الديناميكية (إنشاء / تعديل / حذف، تدعم HTML).
+- كلمة سر المطور.
 
-### 2) كلمة سر لوحة المطور
-- الكلمة الافتراضية: **admin123**
-- بعد الدخول، غيّرها من تبويب "🔑 كلمة السر"
+## 🔐 ملاحظة أمنية
+كلمة السر مخزّنة في Supabase ويتم التحقق منها من المتصفح (طلب المستخدم).
+لرفع مستوى الأمان لاحقاً يُنصح بنقل التحقق إلى Edge Function.
 
-### 3) الاستضافة على Vercel
-1. ارفع الملفات على مستودع GitHub جديد
-2. ادخل https://vercel.com/new واختر المستودع
-3. اضغط **Deploy** (لا يحتاج أي إعدادات — موقع ثابت)
-
-### 4) الاستضافة على GitHub Pages (اختياري)
-- Settings → Pages → Branch: main / root → Save
-
-## الروابط
-- لوحة المطور: `/admin.html`
-- التعليمات: `/instructions.html`
+## 🔗 السيرفر
+- IP: `144.76.72.157`
+- Port: `27065`
+- Join: `minecraft://?addExternalServer=RYNC+PLAY|rync.falix.me%3A27065`

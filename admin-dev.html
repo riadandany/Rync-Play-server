@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>لوحة المطور - Rync Play</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" href="assets/logo.png" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg-stage"></div><div class="bg-grid"></div>
+
+<nav class="nav"><div class="nav-inner">
+  <div class="brand"><img src="assets/logo.png" class="logo" alt=""><h1>لوحة المطور</h1></div>
+  <a class="btn ghost" href="/">← الرئيسية</a>
+</div></nav>
+
+<!-- Login -->
+<section id="login-view" class="login-wrap">
+  <div class="card login-card">
+    <h2 style="margin-top:0">🔐 تسجيل الدخول</h2>
+    <label class="label">كلمة سر المطور</label>
+    <input id="pw" class="input" type="password" placeholder="••••••" />
+    <div style="margin-top:14px;display:flex;gap:10px">
+      <button class="btn" id="login-btn">دخول</button>
+    </div>
+    <p id="login-err" style="color:#ff6b6b;margin-top:10px;display:none">كلمة السر غير صحيحة</p>
+  </div>
+</section>
+
+<!-- Dashboard -->
+<section id="dash-view" class="section" style="display:none">
+  <div class="tabs">
+    <button class="tab active" data-tab="settings">⚙️ الإعدادات</button>
+    <button class="tab" data-tab="instructions">📜 التعليمات</button>
+    <button class="tab" data-tab="announcements">📣 الإعلانات</button>
+    <button class="tab" data-tab="pages">📚 الصفحات</button>
+    <button class="tab" data-tab="security">🔑 كلمة السر</button>
+    <button class="tab danger" id="logout-btn" style="margin-right:auto">خروج</button>
+  </div>
+
+  <!-- Settings -->
+  <div class="card tab-pane" id="pane-settings">
+    <h2 style="margin-top:0">إعدادات الموقع</h2>
+    <label class="label">اسم الموقع</label>
+    <input class="input" id="s-site_title" />
+    <label class="label">وصف الموقع</label>
+    <input class="input" id="s-site_description" />
+    <label class="label">عنوان السيرفر (IP)</label>
+    <input class="input" id="s-server_address" />
+    <label class="label">المنفذ (Port)</label>
+    <input class="input" id="s-server_port" />
+    <label class="label">رابط الدخول (minecraft://)</label>
+    <input class="input" id="s-join_link" />
+    <label class="label">شفافية الخلفية (0 إلى 1)</label>
+    <input class="input" id="s-bg_opacity" type="number" step="0.05" min="0" max="1" />
+    <div style="margin-top:16px"><button class="btn" id="save-settings">حفظ</button></div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="card tab-pane" id="pane-instructions" style="display:none">
+    <h2 style="margin-top:0">تعديل التعليمات</h2>
+    <p style="color:var(--muted)">كل سطر يمثّل خطوة.</p>
+    <textarea class="input" id="s-instructions"></textarea>
+    <div style="margin-top:16px"><button class="btn" id="save-instructions">حفظ التعليمات</button></div>
+  </div>
+
+  <!-- Announcements -->
+  <div class="card tab-pane" id="pane-announcements" style="display:none">
+    <h2 style="margin-top:0">الإعلانات / الرسائل</h2>
+    <label class="label">إعلان جديد</label>
+    <input class="input" id="new-ann" placeholder="اكتب الإعلان…" />
+    <div style="margin-top:10px"><button class="btn" id="add-ann">إضافة</button></div>
+    <hr style="border-color:var(--line);margin:18px 0">
+    <div id="ann-list"></div>
+  </div>
+
+  <!-- Pages -->
+  <div class="card tab-pane" id="pane-pages" style="display:none">
+    <h2 style="margin-top:0">إدارة الصفحات</h2>
+    <div class="row">
+      <input class="input" id="p-slug" placeholder="المعرّف (slug) - مثال: rules" style="flex:1;min-width:180px"/>
+      <input class="input" id="p-title" placeholder="عنوان الصفحة" style="flex:2;min-width:180px"/>
+    </div>
+    <label class="label">المحتوى (يدعم HTML)</label>
+    <textarea class="input" id="p-content" style="min-height:180px"></textarea>
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button class="btn" id="save-page">حفظ / تحديث</button>
+      <button class="btn ghost" id="clear-page">جديد</button>
+    </div>
+    <hr style="border-color:var(--line);margin:18px 0">
+    <div id="pages-list"></div>
+  </div>
+
+  <!-- Security -->
+  <div class="card tab-pane" id="pane-security" style="display:none">
+    <h2 style="margin-top:0">تغيير كلمة السر</h2>
+    <label class="label">كلمة السر الجديدة</label>
+    <input class="input" id="new-pw" type="text" />
+    <div style="margin-top:14px"><button class="btn" id="save-pw">حفظ</button></div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body></html>

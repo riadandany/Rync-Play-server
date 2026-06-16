@@ -1,0 +1,65 @@
+-- =====================================================
+-- Rync Play Server - Supabase Schema
+-- شغّل هذا الملف داخل SQL Editor في Supabase
+-- =====================================================
+
+-- 1) جدول الإعدادات العامة (يُخزّن كلمة سر المطور + روابط + إعدادات)
+create table if not exists public.settings (
+  key   text primary key,
+  value text
+);
+
+-- 2) جدول الصفحات الديناميكية (يُديرها المطور من لوحة التحكم)
+create table if not exists public.pages (
+  id         uuid primary key default gen_random_uuid(),
+  slug       text unique not null,
+  title      text not null,
+  content    text not null default '',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- 3) جدول الإعلانات / الرسائل
+create table if not exists public.announcements (
+  id         uuid primary key default gen_random_uuid(),
+  message    text not null,
+  active     boolean default true,
+  created_at timestamptz default now()
+);
+
+-- 4) صلاحيات الوصول عبر Data API (مطلوبة)
+grant select, insert, update, delete on public.settings       to anon, authenticated;
+grant select, insert, update, delete on public.pages          to anon, authenticated;
+grant select, insert, update, delete on public.announcements  to anon, authenticated;
+grant all on public.settings       to service_role;
+grant all on public.pages          to service_role;
+grant all on public.announcements  to service_role;
+
+-- 5) تفعيل RLS مع سياسات مفتوحة (التحقق من كلمة السر يتم في الواجهة)
+alter table public.settings      enable row level security;
+alter table public.pages         enable row level security;
+alter table public.announcements enable row level security;
+
+drop policy if exists "open_all_settings"      on public.settings;
+drop policy if exists "open_all_pages"         on public.pages;
+drop policy if exists "open_all_announcements" on public.announcements;
+
+create policy "open_all_settings"      on public.settings      for all using (true) with check (true);
+create policy "open_all_pages"         on public.pages         for all using (true) with check (true);
+create policy "open_all_announcements" on public.announcements for all using (true) with check (true);
+
+-- 6) القيم الافتراضية
+insert into public.settings (key, value) values
+  ('admin_password',    'admin'),
+  ('server_address',    '144.76.72.157'),
+  ('server_port',       '27065'),
+  ('join_link',         'minecraft://?addExternalServer=RYNC+PLAY|rync.falix.me%3A27065'),
+  ('site_title',        'Rync Play Server'),
+  ('site_description',  'أفخم سيرفر ماين كرافت عربي - انضم إلينا الآن!'),
+  ('bg_opacity',        '0.55'),
+  ('instructions',      '1) اضغط زر "الدخول للسيرفر" من الصفحة الرئيسية.\n2) أو افتح ماين كرافت يدوياً وأضف السيرفر:\n   - العنوان: 144.76.72.157\n   - البورت: 27065\n3) استمتع باللعب مع أصدقائك!')
+on conflict (key) do nothing;
+
+insert into public.announcements (message, active) values
+  ('🎉 مرحباً بكم في Rync Play - أفخم تجربة ماين كرافت!', true)
+on conflict do nothing;

@@ -1,0 +1,3 @@
+// إعدادات الاتصال بـ Supabase
+window.SUPABASE_URL = "https://infiapggmsfcitdmryly.supabase.co";
+window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluZmlhcGdnbXNmY2l0ZG1yeWx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODM1NDQsImV4cCI6MjA5Njk1OTU0NH0.SreUB-6ChKMI1Es5_ckH1iG4ou11dI4D-5crppHCe9M";

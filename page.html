@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>صفحة - Rync Play</title>
+<link rel="icon" href="assets/logo.png" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="bg-stage"></div><div class="bg-grid"></div>
+
+<nav class="nav"><div class="nav-inner">
+  <div class="brand"><img src="assets/logo.png" class="logo" alt=""><h1>RYNC PLAY</h1></div>
+  <a class="btn ghost" href="/">← الرئيسية</a>
+</div></nav>
+
+<section class="section">
+  <div class="card">
+    <h2 id="p-title" style="margin-top:0">…</h2>
+    <div id="p-content" style="white-space:pre-wrap;line-height:1.9;color:#e9ffe9"></div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+const slug = new URLSearchParams(location.search).get('slug');
+(async()=>{
+  if(!slug){ document.getElementById('p-title').textContent='صفحة غير موجودة'; return; }
+  const { data } = await sb.from('pages').select('*').eq('slug',slug).maybeSingle();
+  if(!data){ document.getElementById('p-title').textContent='الصفحة غير متوفرة'; return; }
+  document.title = data.title + ' - Rync Play';
+  document.getElementById('p-title').textContent = data.title;
+  document.getElementById('p-content').innerHTML = data.content;
+})();
+</script>
+</body></html>
