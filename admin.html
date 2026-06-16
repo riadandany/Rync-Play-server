@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة المطور — RYNC PLAY</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="index.html" class="brand">
+        <div class="logo">R</div>
+        <span class="display neon">لوحة المطور</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="btn">الرئيسية</a>
+        <button id="logoutBtn" class="btn danger" style="display:none;" onclick="logout()">خروج</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div id="login" class="login-box card">
+      <h1 class="display neon">🔐 الدخول للوحة المطور</h1>
+      <div class="form-row">
+        <label>كلمة السر</label>
+        <input type="password" id="pw" onkeydown="if(event.key==='Enter')login()" />
+      </div>
+      <p id="err" style="color:#ff6b6b; margin-bottom:10px; min-height:1.2em;"></p>
+      <button class="btn btn-hero" style="padding:14px 30px;" onclick="login()">دخول</button>
+      <p style="margin-top:18px; color:var(--muted); font-size:.85rem;">
+        كلمة السر محفوظة بشكل مشفّر في قاعدة البيانات.<br/>الافتراضية: <code>admin123</code>
+      </p>
+    </div>
+
+    <div id="panel" style="display:none;">
+      <div class="admin-tabs">
+        <button class="btn tab active" data-tab="settings">⚙️ الإعدادات</button>
+        <button class="btn tab" data-tab="announcements">📢 الإعلانات</button>
+        <button class="btn tab" data-tab="instructions">📖 التعليمات</button>
+        <button class="btn tab" data-tab="password">🔑 كلمة السر</button>
+      </div>
+
+      <!-- Settings -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="card">
+          <h2 class="display neon" style="text-align:right; margin-bottom:18px;">إعدادات الموقع</h2>
+          <div class="form-row"><label>اسم الموقع</label><input id="s_name" /></div>
+          <div class="form-row"><label>وصف الموقع</label><textarea id="s_desc"></textarea></div>
+          <div class="form-row"><label>رابط الدخول (minecraft://)</label><input id="s_join" /></div>
+          <div class="form-row"><label>عنوان السيرفر</label><input id="s_addr" /></div>
+          <div class="form-row"><label>البورت</label><input id="s_port" /></div>
+          <div class="form-row"><label>رابط ديسكورد</label><input id="s_discord" /></div>
+          <div class="form-row"><label>رابط يوتيوب</label><input id="s_yt" /></div>
+          <div class="form-row"><label>رابط تيك توك</label><input id="s_tt" /></div>
+          <div class="form-row"><label>صورة الخلفية (رابط)</label><input id="s_bg" /></div>
+          <div class="form-row"><label>شفافية الخلفية: <span id="s_opval">0.6</span></label>
+            <input type="range" min="0.1" max="1" step="0.05" id="s_op" oninput="document.getElementById('s_opval').textContent=this.value" />
+          </div>
+          <button class="btn btn-hero" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+        </div>
+      </div>
+
+      <!-- Announcements -->
+      <div class="tab-panel" id="tab-announcements" style="display:none;">
+        <div class="card" style="margin-bottom:18px;">
+          <h2 class="display neon" style="text-align:right; margin-bottom:18px;">إضافة إعلان</h2>
+          <div class="form-row"><label>العنوان</label><input id="a_title" /></div>
+          <div class="form-row"><label>النص</label><textarea id="a_body"></textarea></div>
+          <button class="btn btn-hero" onclick="addAnnouncement()">➕ إضافة</button>
+        </div>
+        <div id="ann_list"></div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="tab-panel" id="tab-instructions" style="display:none;">
+        <div class="card" style="margin-bottom:18px;">
+          <h2 class="display neon" style="text-align:right; margin-bottom:18px;">إضافة خطوة</h2>
+          <div class="form-row"><label>رقم الخطوة</label><input type="number" id="i_step" value="1" /></div>
+          <div class="form-row"><label>العنوان</label><input id="i_title" /></div>
+          <div class="form-row"><label>الشرح</label><textarea id="i_body"></textarea></div>
+          <button class="btn btn-hero" onclick="addInstruction()">➕ إضافة</button>
+        </div>
+        <div id="ins_list"></div>
+      </div>
+
+      <!-- Password -->
+      <div class="tab-panel" id="tab-password" style="display:none;">
+        <div class="card login-box" style="margin:0 auto;">
+          <h2 class="display neon">تغيير كلمة السر</h2>
+          <div class="form-row"><label>الكلمة الحالية</label><input type="password" id="p_old" /></div>
+          <div class="form-row"><label>الكلمة الجديدة</label><input type="password" id="p_new" /></div>
+          <div class="form-row"><label>تأكيد الكلمة الجديدة</label><input type="password" id="p_new2" /></div>
+          <button class="btn btn-hero" onclick="changePassword()">🔑 تغيير</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" style="display:none;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    const AUTH_KEY = 'rync_admin_authed';
+    function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none', 2500); }
+    function escapeHtml(s){return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+    async function login() {
+      const pw = document.getElementById('pw').value;
+      const err = document.getElementById('err');
+      err.textContent = '';
+      if (!pw) { err.textContent = 'أدخل كلمة السر'; return; }
+      const { data, error } = await sb.rpc('verify_admin_password', { input: pw });
+      if (error) { err.textContent = 'خطأ: ' + error.message; return; }
+      if (!data) { err.textContent = 'كلمة السر غير صحيحة'; return; }
+      sessionStorage.setItem(AUTH_KEY, '1');
+      showPanel();
+    }
+    function logout() { sessionStorage.removeItem(AUTH_KEY); location.reload(); }
+
+    function showPanel() {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'inline-flex';
+      loadAll();
+    }
+    if (sessionStorage.getItem(AUTH_KEY) === '1') showPanel();
+
+    document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+      document.getElementById('tab-' + t.dataset.tab).style.display = 'block';
+    });
+
+    async function loadAll() { loadSettingsForm(); loadAnnouncements(); loadInstructions(); }
+
+    async function loadSettingsForm() {
+      const s = await loadSettings();
+      s_name.value=s.site_name; s_desc.value=s.description; s_join.value=s.join_url;
+      s_addr.value=s.server_address; s_port.value=s.server_port;
+      s_discord.value=s.discord_url||''; s_yt.value=s.youtube_url||''; s_tt.value=s.tiktok_url||'';
+      s_bg.value=s.background_url||''; s_op.value=s.background_opacity; s_opval.textContent=s.background_opacity;
+    }
+    async function saveSettings() {
+      const payload = {
+        id: 1, site_name: s_name.value, description: s_desc.value, join_url: s_join.value,
+        server_address: s_addr.value, server_port: s_port.value,
+        discord_url: s_discord.value, youtube_url: s_yt.value, tiktok_url: s_tt.value,
+        background_url: s_bg.value, background_opacity: parseFloat(s_op.value),
+      };
+      const { error } = await sb.from('site_settings').upsert(payload);
+      toast(error ? 'خطأ: ' + error.message : '✓ تم الحفظ');
+    }
+
+    async function loadAnnouncements() {
+      const { data } = await sb.from('announcements').select('*').order('created_at', { ascending: false });
+      document.getElementById('ann_list').innerHTML = (data||[]).map(a => `
+        <div class="item-row">
+          <div><strong class="neon">${escapeHtml(a.title)}</strong><br/><small>${escapeHtml(a.body)}</small><br/><small style="color:var(--muted);">الحالة: ${a.active?'ظاهر':'مخفي'}</small></div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <button class="btn" onclick="toggleAnn('${a.id}', ${!a.active})">${a.active?'إخفاء':'إظهار'}</button>
+            <button class="btn danger" onclick="delAnn('${a.id}')">حذف</button>
+          </div>
+        </div>`).join('');
+    }
+    async function addAnnouncement() {
+      if (!a_title.value.trim()) return;
+      const { error } = await sb.from('announcements').insert({ title: a_title.value, body: a_body.value, active: true });
+      if (error) return toast('خطأ: '+error.message);
+      a_title.value=''; a_body.value=''; toast('تمت الإضافة'); loadAnnouncements();
+    }
+    async function toggleAnn(id, active) { await sb.from('announcements').update({ active }).eq('id', id); loadAnnouncements(); }
+    async function delAnn(id) { if (!confirm('حذف؟')) return; await sb.from('announcements').delete().eq('id', id); loadAnnouncements(); }
+
+    async function loadInstructions() {
+      const { data } = await sb.from('instructions').select('*').order('step_number');
+      document.getElementById('ins_list').innerHTML = (data||[]).map(i => `
+        <div class="item-row">
+          <div><strong class="neon">#${i.step_number} — ${escapeHtml(i.title)}</strong><br/><small>${escapeHtml(i.body)}</small></div>
+          <button class="btn danger" onclick="delIns('${i.id}')">حذف</button>
+        </div>`).join('');
+    }
+    async function addInstruction() {
+      if (!i_title.value.trim()) return;
+      const { error } = await sb.from('instructions').insert({ step_number: parseInt(i_step.value)||1, title: i_title.value, body: i_body.value });
+      if (error) return toast('خطأ: '+error.message);
+      i_title.value=''; i_body.value=''; i_step.value = (parseInt(i_step.value)||1)+1; toast('تمت الإضافة'); loadInstructions();
+    }
+    async function delIns(id) { if (!confirm('حذف؟')) return; await sb.from('instructions').delete().eq('id', id); loadInstructions(); }
+
+    async function changePassword() {
+      if (p_new.value !== p_new2.value) return toast('الكلمتان غير متطابقتين');
+      if (p_new.value.length < 4) return toast('كلمة السر قصيرة');
+      const { data, error } = await sb.rpc('change_admin_password', { old_password: p_old.value, new_password: p_new.value });
+      if (error) return toast('خطأ: '+error.message);
+      if (!data) return toast('الكلمة الحالية غير صحيحة');
+      p_old.value=p_new.value=p_new2.value=''; toast('✓ تم تغيير كلمة السر');
+    }
+  </script>
+</body>
+</html>

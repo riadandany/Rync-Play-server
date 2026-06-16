@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RYNC PLAY — سيرفر ماين كرافت</title>
+  <meta name="description" content="انضم إلى سيرفر RYNC PLAY لماين كرافت بنقرة واحدة. عنوان السيرفر والبورت جاهزان للنسخ." />
+  <meta property="og:title" content="RYNC PLAY — Minecraft Server" />
+  <meta property="og:description" content="سيرفر ماين كرافت العربي الأفخم" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="index.html" class="brand">
+        <div class="logo">R</div>
+        <span class="display neon" data-site-name>RYNC PLAY</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="btn">الرئيسية</a>
+        <a href="instructions.html" class="btn">تعليمات</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="display neon" data-site-name>RYNC PLAY</h1>
+      <p data-description>سيرفر ماين كرافت العربي الأفخم — انضم بنقرة واحدة</p>
+      <a class="btn btn-hero" data-join-url href="#">▶ ادخل السيرفر الآن</a>
+      <p class="hint">يتطلب وجود لعبة Minecraft Bedrock على جهازك</p>
+    </section>
+
+    <section id="announcements-section" style="display:none;">
+      <h2 class="display neon">📢 الإعلانات</h2>
+      <div id="announcements"></div>
+    </section>
+
+    <section>
+      <h2 class="display neon">معلومات السيرفر</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="label">🌐 عنوان السيرفر (Address)</div>
+          <div class="copy-row">
+            <span data-address>144.76.72.157</span>
+            <button class="copy-btn" onclick="copyText(document.querySelector('[data-address]').textContent, this)">نسخ</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="label">🔌 البورت (Port)</div>
+          <div class="copy-row">
+            <span data-port>27065</span>
+            <button class="copy-btn" onclick="copyText(document.querySelector('[data-port]').textContent, this)">نسخ</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="display neon">تواصل معنا</h2>
+      <div class="grid-3">
+        <div class="card" style="text-align:center;opacity:.7;">
+          <div class="display" style="font-size:1.1rem;">Discord</div>
+          <small>قريباً</small>
+        </div>
+        <div class="card" style="text-align:center;opacity:.7;">
+          <div class="display" style="font-size:1.1rem;">YouTube</div>
+          <small>قريباً</small>
+        </div>
+        <div class="card" style="text-align:center;opacity:.7;">
+          <div class="display" style="font-size:1.1rem;">TikTok</div>
+          <small>قريباً</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> <span data-site-name>RYNC PLAY</span> — جميع الحقوق محفوظة</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    (async () => {
+      const s = await loadSettings();
+      applySettings(s);
+      // إعلانات
+      const { data: anns } = await sb.from('announcements').select('*').eq('active', true).order('created_at', { ascending: false }).limit(5);
+      if (anns && anns.length) {
+        document.getElementById('announcements-section').style.display = 'block';
+        document.getElementById('announcements').innerHTML = anns.map(a => `
+          <div class="announcement">
+            <h3>${escapeHtml(a.title)}</h3>
+            <p>${escapeHtml(a.body)}</p>
+          </div>`).join('');
+      }
+    })();
+    function escapeHtml(s){return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تعليمات الدخول — RYNC PLAY</title>
+  <meta name="description" content="خطوات الدخول إلى سيرفر RYNC PLAY في ماين كرافت." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="index.html" class="brand">
+        <div class="logo">R</div>
+        <span class="display neon" data-site-name>RYNC PLAY</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="btn">الرئيسية</a>
+        <a href="instructions.html" class="btn">تعليمات</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="display neon">📖 تعليمات الدخول</h1>
+      <p>اتبع هذه الخطوات للانضمام إلى السيرفر بسهولة</p>
+    </section>
+
+    <section>
+      <div id="steps"></div>
+    </section>
+
+    <section style="text-align:center; margin-top:40px;">
+      <a class="btn btn-hero" data-join-url href="#">▶ ادخل السيرفر الآن</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> <span data-site-name>RYNC PLAY</span></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function escapeHtml(s){return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    (async () => {
+      applySettings(await loadSettings());
+      const { data } = await sb.from('instructions').select('*').order('step_number');
+      const items = data && data.length ? data : [
+        { step_number:1, title:'افتح ماين كرافت', body:'تأكد أن النسخة Bedrock مثبتة.' },
+        { step_number:2, title:'اضغط زر الدخول', body:'سيتم إضافة السيرفر تلقائياً.' },
+        { step_number:3, title:'العنوان والبورت', body:'العنوان: 144.76.72.157 — البورت: 27065' },
+      ];
+      document.getElementById('steps').innerHTML = items.map(i => `
+        <div class="step">
+          <div class="num">${i.step_number}</div>
+          <div>
+            <h3 class="display">${escapeHtml(i.title)}</h3>
+            <p>${escapeHtml(i.body)}</p>
+          </div>
+        </div>`).join('');
+    })();
+  </script>
+</body>
+</html>
